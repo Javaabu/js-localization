@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Javaabu\JsLocalization\Commands\ExportCommand;
 use Javaabu\JsLocalization\Commands\MissingCommand;
+use Javaabu\JsLocalization\Commands\TranslateCommand;
 use Javaabu\JsLocalization\Http\Controllers\TranslationsController;
 use Javaabu\JsLocalization\Http\Middleware\LoadTranslations;
 use Javaabu\JsLocalization\Missing\KeyScanner;
@@ -59,6 +60,7 @@ class JsLocalizationServiceProvider extends ServiceProvider
             $this->commands([
                 ExportCommand::class,
                 MissingCommand::class,
+                TranslateCommand::class,
             ]);
 
             $this->publishes([

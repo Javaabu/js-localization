@@ -220,7 +220,7 @@ class JsLocalization
      */
     public function flatLines(string $locale, bool $namespaced = true): array
     {
-        $flat = $this->loader->load($locale, '*', '*');
+        $flat = $this->jsonLines($locale);
 
         foreach ($this->groups($locale) as $group) {
             if (! $namespaced && str_contains($group, '::')) {
@@ -233,6 +233,16 @@ class JsLocalization
         }
 
         return $flat;
+    }
+
+    /**
+     * A locale's JSON lines: lang/{locale}.json merged with packages' JSON.
+     *
+     * @return array<string, mixed>
+     */
+    public function jsonLines(string $locale): array
+    {
+        return $this->loader->load($locale, '*', '*');
     }
 
     /**
@@ -376,7 +386,7 @@ class JsLocalization
      * @param  array<mixed>  $lines
      * @return array<string, mixed>
      */
-    protected function flatten(array $lines, string $prefix = ''): array
+    public function flatten(array $lines, string $prefix = ''): array
     {
         $flat = [];
 

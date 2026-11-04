@@ -149,4 +149,34 @@ return [
         'base' => null,
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | AI translation
+    |--------------------------------------------------------------------------
+    |
+    | php artisan lang:translate --to=dv fills in missing lines with laravel/ai
+    | (composer require laravel/ai). driver and model default to laravel/ai's
+    | own defaults. The glossary is per locale, or the path of a JSON file of
+    | the same shape. Notes are added to the instructions for a locale.
+    |
+    */
+
+    'translate' => [
+        'driver' => null,
+
+        'model' => null,
+
+        'batch' => 40,
+
+        'glossary' => [
+            // 'dv' => ['Invoice' => 'އިންވޮއިސް'],
+        ],
+
+        'notes' => [
+            'dv' => 'Write in Thaana script, in the formal Dhivehi used on Maldivian government and business websites. Use established Dhivehi words where they exist, and transliterate technical terms into Thaana otherwise.',
+        ],
+
+        'report_path' => storage_path('js-localization/reports'),
+    ],
+
 ];

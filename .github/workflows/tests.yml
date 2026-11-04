@@ -66,6 +66,28 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: false
 
+  without-optional:
+    runs-on: ubuntu-latest
+
+    name: Without laravel/ai
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          coverage: none
+
+      - name: Install dependencies without laravel/ai
+        run: |
+          composer remove laravel/ai --dev --no-update --no-interaction
+          composer update --prefer-dist --no-interaction
+
+      - name: Run tests
+        run: vendor/bin/phpunit --exclude-group ai --fail-on-skipped
+
   pint:
     runs-on: ubuntu-latest
 

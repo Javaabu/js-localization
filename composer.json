@@ -33,12 +33,13 @@
     },
     "require-dev": {
         "javaabu/boost-javaabu-guidelines": "^1.4",
+        "laravel/ai": "^1.0",
         "laravel/pint": "^1.24",
         "orchestra/testbench": "^10.0 || ^11.0",
         "phpunit/phpunit": "^11.5.3 || ^12.5.8"
     },
     "suggest": {
-        "laravel/ai": "Fill missing translations with AI: php artisan lang:translate (^0.6 || ^1.0)"
+        "laravel/ai": "Fill in missing translations with AI: php artisan lang:translate (^1.0)"
     },
     "autoload": {
         "psr-4": {

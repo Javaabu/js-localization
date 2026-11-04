@@ -15,4 +15,14 @@ return [
         'base_line' => 'In :base',
         'total' => '{1} :count translation is missing.|[2,*] :count translations are missing.',
     ],
+    'translate' => [
+        'no_ai' => 'lang:translate needs laravel/ai. Install it with: composer require laravel/ai',
+        'no_target' => 'Say which locales to fill in: --to=dv',
+        'bad_glossary' => 'The glossary [:path] isn\'t a JSON file of terms by locale.',
+        'nothing' => 'Nothing to translate for :locale.',
+        'translating' => 'Translating :count line(s) from :from to :to...',
+        'added' => 'Added',
+        'rejected' => 'Rejected',
+        'report' => 'Report',
+    ],
 ];
