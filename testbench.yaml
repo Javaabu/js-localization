@@ -1,0 +1,12 @@
+# For `vendor/bin/testbench`: runs artisan in the fixture app the tests use,
+# with the fixture package installed. The Vite plugin's tests run
+# `vendor/bin/testbench lang:js` through it.
+laravel: ./tests/Fixtures/app
+
+providers:
+  - Javaabu\Manifest\ManifestServiceProvider
+  - Javaabu\JsLocalization\JsLocalizationServiceProvider
+  - Acme\Shop\ShopServiceProvider
+
+dont-discover:
+  - "*"

@@ -1,0 +1,5 @@
+{
+    "name": "javaabu/js-localization-fixture-app",
+    "description": "The Laravel app the javaabu/js-localization tests run in.",
+    "type": "project"
+}
