@@ -2,6 +2,7 @@
 
 namespace Javaabu\JsLocalization\Tests;
 
+use Acme\Shop\ShopServiceProvider;
 use Javaabu\JsLocalization\JsLocalizationServiceProvider;
 use Javaabu\Manifest\ManifestServiceProvider;
 use Orchestra\Testbench\TestCase as BaseTestCase;
@@ -22,6 +23,7 @@ abstract class TestCase extends BaseTestCase
         return [
             ManifestServiceProvider::class,
             JsLocalizationServiceProvider::class,
+            ShopServiceProvider::class,
         ];
     }
 }

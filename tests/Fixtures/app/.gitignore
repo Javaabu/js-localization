@@ -2,6 +2,6 @@
 /public/build
 /public/js-localization
 /public/vendor
-/resources/js/lang
-/lang/vendor
+/resources/js/translations
+/storage/js-localization
 /node_modules
