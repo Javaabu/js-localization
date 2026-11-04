@@ -5,3 +5,5 @@
 /resources/js/translations
 /storage/js-localization
 /node_modules
+/public/e2e-build
+/public/e2e-hot

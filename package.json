@@ -18,7 +18,8 @@
     "node": ">=20.19"
   },
   "scripts": {
-    "build": "pnpm build:browser",
+    "build": "pnpm build:plugin && pnpm build:browser",
+    "build:plugin": "tsc -p tsconfig.build.json",
     "build:browser": "vite build --config vite.browser.config.ts",
     "test": "vitest run",
     "test:watch": "vitest",
