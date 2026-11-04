@@ -115,4 +115,38 @@ return [
         'store' => null,
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Missing translations
+    |--------------------------------------------------------------------------
+    |
+    | php artisan lang:missing scans these files and folders for keys passed
+    | as string literals to these functions, and compares every locale with
+    | the base locale (null: app.fallback_locale).
+    |
+    */
+
+    'missing' => [
+        'paths' => [
+            app_path(),
+            resource_path('views'),
+            resource_path('js'),
+            base_path('routes'),
+        ],
+
+        'functions' => [
+            '__',
+            'trans',
+            'trans_choice',
+            'transChoice',
+            '@lang',
+            '@choice',
+            'Lang::get',
+            'Lang::choice',
+            'Lang::has',
+        ],
+
+        'base' => null,
+    ],
+
 ];

@@ -199,7 +199,7 @@ class JsLocalization
             $lines = $this->loader->load($locale, '*', '*');
         }
 
-        foreach ($this->groups($locale) as $group) {
+        foreach ($this->groups($locale, exported_only: true) as $group) {
             $lines[$group] = $this->loadGroup($locale, $group);
         }
 
@@ -213,9 +213,54 @@ class JsLocalization
     }
 
     /**
+     * Every line a locale has, exported or not, flattened to the keys you
+     * pass to __(): 'Save', 'messages.nested.title', 'shop::cart.empty'.
+     *
+     * @return array<string, mixed>
+     */
+    public function flatLines(string $locale, bool $namespaced = true): array
+    {
+        $flat = $this->loader->load($locale, '*', '*');
+
+        foreach ($this->groups($locale) as $group) {
+            if (! $namespaced && str_contains($group, '::')) {
+                continue;
+            }
+
+            foreach ($this->flatten($this->loadGroup($locale, $group)) as $key => $line) {
+                $flat["{$group}.{$key}"] = $line;
+            }
+        }
+
+        return $flat;
+    }
+
+    /**
+     * Whether a group ('messages', 'shop::cart') has a file in any locale.
+     */
+    public function isGroup(string $group): bool
+    {
+        foreach ($this->locales() as $locale) {
+            if (in_array($group, $this->groups($locale), true)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Whether lang:js and the endpoint export a group ('messages', 'shop::cart').
+     */
+    public function exports(string $group): bool
+    {
+        return $this->shouldExport($group);
+    }
+
+    /**
      * @return array<mixed>
      */
-    protected function loadGroup(string $locale, string $group): array
+    public function loadGroup(string $locale, string $group): array
     {
         if (! str_contains($group, '::')) {
             return $this->loader->load($locale, $group, '*');
@@ -227,12 +272,12 @@ class JsLocalization
     }
 
     /**
-     * The groups a locale has files for, filtered by the groups and except
-     * settings.
+     * The groups a locale has files for, optionally filtered by the groups
+     * and except settings.
      *
      * @return array<int, string>
      */
-    protected function groups(string $locale): array
+    public function groups(string $locale, bool $exported_only = false): array
     {
         $groups = [];
 
@@ -252,7 +297,11 @@ class JsLocalization
             }
         }
 
-        $groups = array_filter(array_unique($groups), fn (string $group) => $this->shouldExport($group));
+        $groups = array_unique($groups);
+
+        if ($exported_only) {
+            $groups = array_filter($groups, fn (string $group) => $this->shouldExport($group));
+        }
 
         return array_values($groups);
     }
@@ -321,6 +370,27 @@ class JsLocalization
     protected function isLocaleName(string $name): bool
     {
         return $name !== 'vendor' && preg_match('/^[A-Za-z]{2,3}([_-][A-Za-z0-9]{2,8})*$/', $name) === 1;
+    }
+
+    /**
+     * @param  array<mixed>  $lines
+     * @return array<string, mixed>
+     */
+    protected function flatten(array $lines, string $prefix = ''): array
+    {
+        $flat = [];
+
+        foreach ($lines as $key => $value) {
+            if (is_array($value)) {
+                $flat += $this->flatten($value, "{$prefix}{$key}.");
+
+                continue;
+            }
+
+            $flat["{$prefix}{$key}"] = $value;
+        }
+
+        return $flat;
     }
 
     /**

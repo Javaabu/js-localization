@@ -8,8 +8,11 @@ use Illuminate\Routing\Route as RoutingRoute;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Javaabu\JsLocalization\Commands\ExportCommand;
+use Javaabu\JsLocalization\Commands\MissingCommand;
 use Javaabu\JsLocalization\Http\Controllers\TranslationsController;
 use Javaabu\JsLocalization\Http\Middleware\LoadTranslations;
+use Javaabu\JsLocalization\Missing\KeyScanner;
+use Javaabu\JsLocalization\Missing\MissingTranslations;
 use Javaabu\Manifest\Concerns\RegistersAssets;
 use Javaabu\Manifest\Package;
 
@@ -33,6 +36,12 @@ class JsLocalizationServiceProvider extends ServiceProvider
             $app['config'],
             $app['cache'],
         ));
+
+        $this->app->bind(MissingTranslations::class, fn ($app) => new MissingTranslations(
+            $app->make(JsLocalization::class),
+            $app->make(KeyScanner::class),
+            $app['translator'],
+        ));
     }
 
     public function boot(): void
@@ -49,6 +58,7 @@ class JsLocalizationServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->commands([
                 ExportCommand::class,
+                MissingCommand::class,
             ]);
 
             $this->publishes([
