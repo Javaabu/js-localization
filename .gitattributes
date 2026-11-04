@@ -13,6 +13,7 @@
 /.prettierrc.json   export-ignore
 /.prettierignore    export-ignore
 /tsconfig.json      export-ignore
+/tsconfig.build.json export-ignore
 /vitest.config.ts   export-ignore
 /testbench.yaml     export-ignore
 /node_modules       export-ignore

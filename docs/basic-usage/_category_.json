@@ -1,0 +1,11 @@
+{
+    "position": 1.3,
+    "label": "Basic Usage",
+    "collapsible": true,
+    "collapsed": false,
+    "link": {
+        "type": "generated-index",
+        "slug": "/js-localization/_categories/basic-usage",
+        "description": "Translations on Blade pages, in Inertia and Vite bundles, exporting them, and finding and filling in missing lines."
+    }
+}

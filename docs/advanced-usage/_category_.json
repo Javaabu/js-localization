@@ -1,0 +1,11 @@
+{
+    "position": 1.32,
+    "label": "Advanced Usage",
+    "collapsible": true,
+    "collapsed": true,
+    "link": {
+        "type": "generated-index",
+        "slug": "/js-localization/_categories/advanced-usage",
+        "description": "Configuration, the translations endpoint, the full API, and the package's own translations."
+    }
+}

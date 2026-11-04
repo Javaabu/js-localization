@@ -1,0 +1,5 @@
+{
+    "name": "JS Localization",
+    "description": "Use your Laravel translations in JavaScript: export them for @javaabu/i18n, load them on Blade pages with no setup, keep them in sync with Vite, find missing lines and fill them with AI",
+    "version": "1"
+}

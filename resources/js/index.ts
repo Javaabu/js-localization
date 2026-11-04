@@ -15,14 +15,15 @@ export interface TranslationsUpdate {
 export const UPDATE_EVENT = "js-localization:update"
 
 /**
- * The endpoint for this page: the one on the Blade entry's script tag, then
- * `<meta name="js-localization">`, then the default.
+ * The endpoint for this page: `<meta name="js-localization">` when the page
+ * sets one, then the one on the Blade entry's script tag (from the
+ * `route.prefix` config), then the default.
  */
 export function endpoint(root: ParentNode = document): string {
   const script = root.querySelector(`script[${ENDPOINT_ATTRIBUTE}]`)
   const meta = root.querySelector('meta[name="js-localization"]')
 
-  return script?.getAttribute(ENDPOINT_ATTRIBUTE) || meta?.getAttribute("content") || DEFAULT_ENDPOINT
+  return meta?.getAttribute("content") || script?.getAttribute(ENDPOINT_ATTRIBUTE) || DEFAULT_ENDPOINT
 }
 
 /**

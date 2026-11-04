@@ -21,8 +21,8 @@ class ExportCommand extends Command
         {--pretty : Indent the output}
         {--stdout : Print every locale as JSON instead of writing files}
         {--no-sort : Keep lines in file order}
-        {--source= : Read language files from this folder instead of the app\'s}
-        {--json : Write JSON (same as --format=json)}
+        {--s|source= : Read language files from this folder instead of the app\'s}
+        {--j|json : Write JSON (same as --format=json)}
         {--c|compress : Kept for Laravel-JS-Localization: output is always compact unless --pretty}';
 
     protected $description = 'Export the app\'s translations for @javaabu/i18n';

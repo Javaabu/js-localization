@@ -24,16 +24,18 @@ describe("endpoint()", () => {
     expect(DEFAULT_ENDPOINT).toBe("/js-localization/{locale}.json")
   })
 
-  it("reads the Blade entry's script tag first", () => {
+  it("reads the Blade entry's script tag", () => {
+    expect(endpoint(page('<script data-js-localization="/script/{locale}.json"></script>'))).toBe(
+      "/script/{locale}.json",
+    )
+  })
+
+  it("lets a meta tag override the script tag", () => {
     const root = page(
       '<meta name="js-localization" content="/meta/{locale}.json"><script data-js-localization="/script/{locale}.json"></script>',
     )
 
-    expect(endpoint(root)).toBe("/script/{locale}.json")
-  })
-
-  it("reads a meta tag", () => {
-    expect(endpoint(page('<meta name="js-localization" content="/meta/{locale}.json">'))).toBe("/meta/{locale}.json")
+    expect(endpoint(root)).toBe("/meta/{locale}.json")
   })
 })
 
