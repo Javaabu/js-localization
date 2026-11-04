@@ -138,6 +138,9 @@ jobs:
 
       - name: Tests with coverage
         run: pnpm test:coverage
+        env:
+          # The tests start a Vite dev server with laravel-vite-plugin.
+          LARAVEL_BYPASS_ENV_CHECK: 1
 
       - name: Upload coverage
         uses: codecov/codecov-action@v5
