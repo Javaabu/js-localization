@@ -8,6 +8,7 @@
 /pint.json          export-ignore
 /tests              export-ignore
 /js                 export-ignore
+/vite.browser.config.ts export-ignore
 /eslint.config.js   export-ignore
 /.prettierrc.json   export-ignore
 /.prettierignore    export-ignore

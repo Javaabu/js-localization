@@ -1,0 +1,24 @@
+[
+    { "key": "Save", "locale": "dv", "expected": "ސޭވްކުރޭ" },
+    { "key": "Welcome, :name!", "replace": { "name": "އަލީ" }, "locale": "dv", "expected": "މަރުޙަބާ، އަލީ!" },
+    { "key": "Only in English", "locale": "dv", "expected": "Only in English" },
+    { "key": "Add to cart", "locale": "dv", "expected": "ކާޓަށް އެޅުއްވުމަށް" },
+    { "key": "messages.welcome", "replace": { "app": "ޖާވާބު" }, "locale": "dv", "expected": "ޖާވާބު އަށް މަރުޙަބާ" },
+    { "key": "messages.nested.title", "locale": "dv", "expected": "ތެރޭގައިވާ ސުރުޚީ" },
+    { "key": "messages.farewell", "locale": "dv", "expected": "Goodbye" },
+    { "key": "messages.apples", "count": 0, "locale": "dv", "expected": "އެއްވެސް އާފަލެއް ނެތް" },
+    { "key": "messages.apples", "count": 1, "locale": "dv", "expected": "އެއް އާފަލް" },
+    { "key": "messages.apples", "count": 5, "locale": "dv", "expected": "5 އާފަލް" },
+    { "key": "messages.apples", "count": 5, "locale": "en", "expected": "5 apples" },
+    { "key": "forum/thread.title", "locale": "dv", "expected": "ތްރެޑް" },
+    { "key": "shop::cart.checkout", "locale": "dv", "expected": "ޗެކްއައުޓް" },
+    { "key": "shop::cart.empty", "locale": "dv", "expected": "ތިޔަ ކާޓު ހުސް" },
+    { "key": "auth.failed", "locale": "en", "expected": "These credentials do not match our records." },
+    {
+        "key": "validation.required",
+        "replace": { "attribute": "name" },
+        "locale": "en",
+        "expected": "The name field is required."
+    },
+    { "key": "messages.missing", "locale": "dv", "expected": "messages.missing" }
+]

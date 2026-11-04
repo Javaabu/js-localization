@@ -85,3 +85,64 @@ jobs:
 
       - name: Check code style
         run: vendor/bin/pint --test
+
+  js:
+    runs-on: ubuntu-latest
+
+    name: JavaScript
+
+    env:
+      # @javaabu/i18n isn't on npm yet: build it from this commit, next to the
+      # checkout, where package.json links it from (link:../i18n). The commit
+      # is pinned so the committed dist/ stays reproducible.
+      I18N_REF: cb07e986968f76189d17ed1647987e90ddb917f7
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          coverage: none
+
+      - name: Install Composer dependencies
+        run: composer update --prefer-dist --no-interaction
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Build @javaabu/i18n
+        run: |
+          git clone --quiet https://github.com/Javaabu/i18n.git ../i18n
+          cd ../i18n
+          git checkout --quiet "$I18N_REF"
+          pnpm install --frozen-lockfile
+          pnpm build
+
+      - name: Install npm dependencies
+        run: pnpm install --frozen-lockfile
+
+      - run: pnpm lint
+      - run: pnpm format:check
+      - run: pnpm typecheck
+
+      - name: Check that the committed dist is up to date
+        run: |
+          pnpm build
+          git status --porcelain -- dist
+          test -z "$(git status --porcelain -- dist)" || (echo "dist is out of date: run pnpm build and commit it." && exit 1)
+
+      - name: Tests with coverage
+        run: pnpm test:coverage
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v5
+        with:
+          files: coverage/lcov.info
+          flags: js
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
