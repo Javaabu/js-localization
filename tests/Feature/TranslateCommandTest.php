@@ -41,7 +41,9 @@ class TranslateCommandTest extends TestCase
     {
         parent::setUp();
 
-        $this->backup = sys_get_temp_dir() . '/js-localization-lang-' . uniqid();
+        $this->backup = storage_path('js-localization-lang-backup');
+
+        File::deleteDirectory($this->backup);
 
         File::copyDirectory(lang_path(), $this->backup);
 
@@ -56,7 +58,8 @@ class TranslateCommandTest extends TestCase
     protected function tearDown(): void
     {
         File::deleteDirectory(lang_path());
-        File::moveDirectory($this->backup, lang_path());
+        File::copyDirectory($this->backup, lang_path());
+        File::deleteDirectory($this->backup);
         File::deleteDirectory(storage_path('js-localization'));
 
         parent::tearDown();
