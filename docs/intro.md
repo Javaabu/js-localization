@@ -20,7 +20,7 @@ return <p>{trans_choice("messages.apples", count)}</p>
 It is the successor of [Laravel-JS-Localization](https://github.com/Javaabu/Laravel-JS-Localization), and does more than export files:
 
 - **Blade pages need no setup.** Every HTML page gets `__()`, `trans()` and `trans_choice()` on `window`, loading the page's locale from a cached endpoint. Delivered through [javaabu/manifest](https://github.com/Javaabu/manifest), so it works with or without Vite.
-- **Inertia and SPA bundles** get the lines from a Vite plugin, one lazy chunk per locale. In development, editing `lang/` updates the page without a reload.
+- **Inertia and SPA bundles** get the lines from a Vite plugin that manifest's `manifest()` runs, one lazy chunk per locale. In development, editing `lang/` updates the page without a reload.
 - **The same lines PHP sees.** Lines are read through Laravel's translation loader: `lang/{locale}/*.php`, nested files like `forum/thread`, `lang/{locale}.json`, packages' JSON lines and namespaced files (`shop::cart`), with your `lang/vendor` overrides.
 - **`php artisan lang:js`** writes them as JSON for `@javaabu/i18n`'s loaders, or as a `<script>` that sets `window.Lang`.
 - **`php artisan lang:missing`** lists keys your PHP, Blade, JS and TSX use that a locale doesn't translate, and lines your base locale has that others lack. It fails in CI when something is missing.

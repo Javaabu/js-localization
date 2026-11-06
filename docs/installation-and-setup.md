@@ -47,23 +47,22 @@ Every full HTML page now loads `@javaabu/i18n`, puts `__()`, `trans()` and `tran
 
 See [Blade pages](./basic-usage/blade).
 
-If your app builds with Vite, add javaabu/manifest's plugin so the script is part of your build (otherwise the package's prebuilt copy is served):
+If your app builds with Vite, add javaabu/manifest's plugin, so the script is part of your build (otherwise the package's prebuilt copy is served). It also runs this package's [Vite plugin](./basic-usage/vite), so there's nothing else to add:
 
 ```js
 // vite.config.js
 import laravel from "laravel-vite-plugin"
 import { defineConfig } from "vite"
 import manifest from "./vendor/javaabu/manifest/dist/vite.js"
-import jsLocalization from "./vendor/javaabu/js-localization/dist/vite.js"
 
 export default defineConfig({
-  plugins: [laravel({ input: ["resources/js/app.js"], refresh: true }), manifest(), jsLocalization()],
+  plugins: [laravel({ input: ["resources/js/app.js"], refresh: true }), manifest()],
 })
 ```
 
 # Inertia, React and Vue
 
-Add both plugins as above, then load the lines in your entry:
+With `manifest()` in `vite.config.js` as above, load the lines in your entry:
 
 ```ts
 // resources/js/app.tsx

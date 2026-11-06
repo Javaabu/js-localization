@@ -14,11 +14,11 @@
 | `src/Translate/` | laravel/ai agent, validator, language file writer, report. Only `TranslationAgent` references laravel/ai classes |
 | `resources/js/blade.ts` | The Blade entry, `js-localization::i18n` |
 | `resources/js/index.ts`, `translations.ts` | `@javaabu/js-localization` and `@javaabu/js-localization/translations` (through manifest's alias) |
-| `js/src/vite.ts` | The Vite plugin |
+| `js/src/vite.ts` | The Vite plugin, registered with manifest (`->vitePlugin('../dist/vite.js')`), so apps' `manifest()` runs the built `dist/vite.js` |
 | `dist/` | Built JS, **committed**: `vite.js` (plugin) and `browser/` (prebuilt Blade entry with i18n bundled). CI fails if it's stale |
 | `tests/Fixtures/app` | The Laravel app tests run in (Testbench base path): `lang/` in en and dv, a package in `vendor/acme/shop`, code for `lang:missing` |
 | `tests/Fixtures/parity.json` | Cases PHP's `__()` and `@javaabu/i18n` (loaded with `lang:js` output) must both pass |
-| `tests/js` | Vitest: Blade entry, plugin unit tests, `e2e/` real Vite builds and a dev server |
+| `tests/js` | Vitest: Blade entry, plugin unit tests, `e2e/` real Vite builds and a dev server, both through `manifest()` (built plugin) and added by hand (source) |
 | `docs`, `llms.txt` | Docusaurus pages and the index for assistants |
 | `resources/boost` | Laravel Boost guideline and skill |
 

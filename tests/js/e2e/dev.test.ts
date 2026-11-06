@@ -1,8 +1,9 @@
 import fs from "node:fs"
 import path from "node:path"
-import { createServer, type ViteDevServer } from "vite"
+import { createLogger, createServer, type ViteDevServer } from "vite"
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest"
-import { app, fixtureConfig } from "./fixture"
+import jsLocalization from "../../../js/src/vite.js"
+import { app, artisan, fixtureConfig, inFixtureApp, type Setup } from "./fixture"
 
 const extra = path.join(app, "lang/dv/extra.php")
 const newLocale = path.join(app, "lang/ar.json")
@@ -26,12 +27,14 @@ function waitFor(sent: Sent[], match: (message: Sent) => boolean): Promise<Sent>
   )
 }
 
-describe("the dev server", () => {
+describe.each<Setup>(["manifest", "standalone"])("the dev server (%s)", (setup) => {
+  inFixtureApp(beforeAll, afterAll)
+
   let server: ViteDevServer
   const sent: Sent[] = []
 
   beforeAll(async () => {
-    server = await createServer(fixtureConfig({ server: { middlewareMode: true, ws: false } }))
+    server = await createServer(fixtureConfig({ server: { middlewareMode: true, ws: false } }, {}, setup))
     await server.pluginContainer.buildStart({})
 
     vi.spyOn(server.ws, "send").mockImplementation(((message: Sent) => {
@@ -108,5 +111,27 @@ describe("the dev server", () => {
     await new Promise((resolve) => setTimeout(resolve, 300))
 
     expect(sent.filter((message) => message.event === "js-localization:update")).toEqual([])
+  })
+})
+
+describe("an app that also adds jsLocalization() by hand", () => {
+  inFixtureApp(beforeAll, afterAll)
+
+  it("gets a warning from manifest that the plugin runs twice", async () => {
+    const warnings: string[] = []
+    const config = fixtureConfig({ server: { middlewareMode: true, ws: false } }, {}, "manifest")
+
+    config.plugins?.push(jsLocalization({ command: `${artisan} lang:js --stdout` }))
+    config.customLogger = {
+      ...createLogger("warn"),
+      warn: (message) => warnings.push(message),
+      warnOnce: (message) => warnings.push(message),
+    }
+
+    const server = await createServer(config)
+
+    await server.close()
+
+    expect(warnings.join("\n")).toContain("javaabu-js-localization")
   })
 })

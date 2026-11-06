@@ -37,6 +37,20 @@ class BladeTest extends TestCase
     }
 
     #[Test]
+    public function it_registers_its_vite_plugin_with_manifest(): void
+    {
+        $this->artisan('manifest:discover')->assertSuccessful();
+
+        $discovery = json_decode(file_get_contents(base_path('bootstrap/cache/manifest.json')), true);
+
+        $this->assertEquals(
+            [['module' => '../dist/vite.js', 'options' => []]],
+            $discovery['packages']['js-localization']['vitePlugins'],
+        );
+        $this->assertFileExists(dirname(__DIR__, 2) . '/dist/vite.js');
+    }
+
+    #[Test]
     public function it_loads_the_blade_entry_on_html_pages(): void
     {
         $this->app->setLocale('dv');

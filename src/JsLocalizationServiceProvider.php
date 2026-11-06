@@ -103,6 +103,7 @@ class JsLocalizationServiceProvider extends ServiceProvider
             ])
             ->js()
             ->dist('../dist/browser')
+            ->vitePlugin('../dist/vite.js')
             ->npm(['@javaabu/i18n' => self::I18N_VERSION]);
     }
 

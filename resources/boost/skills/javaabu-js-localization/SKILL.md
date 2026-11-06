@@ -1,6 +1,6 @@
 ---
 name: javaabu-js-localization
-description: Translate text in JavaScript with a Laravel app's own translations, through javaabu/js-localization and @javaabu/i18n. Use when adding or changing user-facing text in JS, TS, React, Vue or inline Blade scripts (__(), trans(), trans_choice(), useTranslation), when setting up translations for Blade pages or Inertia apps, editing lang/ files, configuring the jsLocalization() Vite plugin or the js-localization config, or running php artisan lang:js, lang:missing or lang:translate.
+description: Translate text in JavaScript with a Laravel app's own translations, through javaabu/js-localization and @javaabu/i18n. Use when adding or changing user-facing text in JS, TS, React, Vue or inline Blade scripts (__(), trans(), trans_choice(), useTranslation), when setting up translations for Blade pages or Inertia apps, editing lang/ files, configuring the Vite plugin manifest() runs for it (manifest({ plugins: { "js-localization": ... } })) or the js-localization config, or running php artisan lang:js, lang:missing or lang:translate.
 license: MIT
 metadata:
   author: Javaabu
@@ -40,11 +40,13 @@ In a Vite entry: `import { __, ready } from "@javaabu/i18n"`, then `await ready(
 ## Inertia, React, Vue
 
 ```js
-// vite.config.js: next to manifest()
+// vite.config.js: manifest() also runs js-localization's Vite plugin. Don't add jsLocalization() too.
 import manifest from "./vendor/javaabu/manifest/dist/vite.js"
-import jsLocalization from "./vendor/javaabu/js-localization/dist/vite.js"
 
-plugins: [laravel({ input: ["resources/js/app.tsx"], refresh: ["resources/views/**", "routes/**"] }), manifest(), jsLocalization(), react()]
+plugins: [laravel({ input: ["resources/js/app.tsx"], refresh: ["resources/views/**", "routes/**"] }), manifest(), react()]
+
+// options, such as PHP in Docker:
+manifest({ plugins: { "js-localization": { command: "./vendor/bin/sail artisan lang:js --stdout" } } })
 ```
 
 ```tsx

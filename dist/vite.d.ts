@@ -46,9 +46,14 @@ export declare function localeModule(lines: Record<string, unknown>): string;
 export declare function changedLocales(before: Translations, after: Translations): string[];
 export declare function isWatched(root: string, watch: string[], file: string): boolean;
 /**
- * Serves the app's translations to its bundle and keeps them current:
+ * Serves the app's translations to its bundle and keeps them current. The
+ * package registers it with javaabu/manifest, so `manifest()` runs it:
  *
- *     plugins: [laravel({ input: ["resources/js/app.ts"] }), manifest(), jsLocalization()]
+ *     plugins: [laravel({ input: ["resources/js/app.ts"] }), manifest()]
+ *
+ * Adding it by hand still works, with the registered one turned off:
+ *
+ *     manifest({ plugins: { "js-localization": false } }), jsLocalization({ ... })
  *
  * then, in the app:
  *

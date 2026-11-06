@@ -8,7 +8,7 @@ Paths are relative to this file. In an app, that's vendor/javaabu/js-localizatio
 
 - Never hard-code user-facing text in JS. Use `__('Save')` (English text as the key, from lang/{locale}.json) or a group key like `__('messages.welcome', { app })`, the same keys as PHP. Pass values as placeholders, never by joining strings.
 - Blade pages: `__()`, `trans()`, `trans_choice()` and `I18n` are on `window` automatically. Wait for them in inline scripts: `document.addEventListener('DOMContentLoaded', async () => { await I18n.ready(); ... })`. Don't add `<script>` tags for @javaabu/i18n or for a messages file.
-- Inertia/React/Vue: add `jsLocalization()` from `./vendor/javaabu/js-localization/dist/vite.js` next to `manifest()` in vite.config.js, then `configure({ loader })` with `loader` from `@javaabu/js-localization/translations` in the entry. Use `useTranslation()` from `@javaabu/i18n/react` in components (Vue: `app.use(i18n)` from `@javaabu/i18n/vue`).
+- Inertia/React/Vue: `manifest()` in vite.config.js runs this package's Vite plugin (don't also add `jsLocalization()`; options go in `manifest({ plugins: { "js-localization": { ... } } })`), then `configure({ loader })` with `loader` from `@javaabu/js-localization/translations` in the entry. Use `useTranslation()` from `@javaabu/i18n/react` in components (Vue: `app.use(i18n)` from `@javaabu/i18n/vue`).
 - Don't commit generated translation files or run `php artisan lang:js` in build scripts when the Vite plugin or the endpoint already provide the lines.
 - Add new lines to lang/ files in every locale the app has (at least `en` and `dv`), with real Dhivehi in Thaana. Run `php artisan lang:missing` to check; it exits non-zero when something is missing.
 - Everything exported is public. Keep private text out with `js-localization.except` (wildcards, group names as in `__()`: `admin`, `emails/*`, `pkg::*`).
@@ -23,7 +23,7 @@ Paths are relative to this file. In an app, that's vendor/javaabu/js-localizatio
 - [Migrating from Laravel-JS-Localization](docs/migrating.md): config, command and Lang.js changes
 - [Blade pages](docs/basic-usage/blade.md): the automatic script, waiting for lines, data-trans, placing it yourself, apps without Vite
 - [Inertia and bundled apps](docs/basic-usage/inertia.md): the loader, React, Vue, the endpoint, shared props, SSR
-- [Vite plugin](docs/basic-usage/vite.md): bundling, HMR, options, refresh paths, Docker
+- [Vite plugin](docs/basic-usage/vite.md): run by manifest(), bundling, HMR, options, refresh paths, Docker, the standalone setup
 - [Exporting translations](docs/basic-usage/exporting.md): lang:js, what's exported, targets and formats, options
 - [Missing translations](docs/basic-usage/missing-translations.md): lang:missing, what it checks, CI, options
 - [AI translation](docs/basic-usage/ai-translation.md): lang:translate with laravel/ai, checks, report, glossary, testing

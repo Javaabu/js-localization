@@ -1,26 +1,47 @@
 import fs from "node:fs"
 import path from "node:path"
 import { build } from "vite"
-import { beforeAll, describe, expect, it } from "vitest"
-import { app, fixtureConfig } from "./fixture"
+import { afterAll, beforeAll, describe, expect, it } from "vitest"
+import { app, fixtureConfig, inFixtureApp, type Setup } from "./fixture"
 
 const out = path.join(app, "public/e2e-build")
 
-function readChunks(): Map<string, string> {
+function readChunks(): string[] {
   const dir = path.join(out, "assets")
 
-  return new Map(fs.readdirSync(dir).map((file) => [file, fs.readFileSync(path.join(dir, file), "utf8")]))
+  return fs.readdirSync(dir).map((file) => fs.readFileSync(path.join(dir, file), "utf8"))
 }
 
-describe("vite build", () => {
+function readManifest(): Record<string, { file: string; isEntry?: boolean; dynamicImports?: string[] }> {
+  return JSON.parse(fs.readFileSync(path.join(out, "manifest.json"), "utf8"))
+}
+
+describe.each<Setup>(["manifest", "standalone"])("vite build (%s)", (setup) => {
+  inFixtureApp(beforeAll, afterAll)
+
+  const plugins: string[] = []
+
   beforeAll(async () => {
     fs.rmSync(out, { recursive: true, force: true })
 
-    await build(fixtureConfig())
+    const config = fixtureConfig({}, {}, setup)
+
+    config.plugins?.push({
+      name: "list-plugins",
+      configResolved(resolved) {
+        plugins.push(...resolved.plugins.map((plugin) => plugin.name))
+      },
+    })
+
+    await build(config)
+  })
+
+  it("runs the plugin once", () => {
+    expect(plugins.filter((name) => name === "javaabu-js-localization")).toHaveLength(1)
   })
 
   it("bundles each locale into its own chunk", () => {
-    const chunks = [...readChunks().values()]
+    const chunks = readChunks()
     const dv = chunks.filter((code) => code.includes("ސޭވްކުރޭ"))
     const en = chunks.filter((code) => code.includes("These credentials do not match our records."))
 
@@ -30,21 +51,14 @@ describe("vite build", () => {
   })
 
   it("loads the locales lazily from the app's entry", () => {
-    const manifest = JSON.parse(fs.readFileSync(path.join(out, "manifest.json"), "utf8"))
-    const entry = manifest["resources/js/app.ts"]
+    const entry = readManifest()["resources/js/app.ts"]
 
-    expect(entry.isEntry).toBe(true)
-    expect(entry.dynamicImports).toHaveLength(2)
-
-    const code = fs.readFileSync(path.join(out, entry.file), "utf8")
-
-    expect(code).not.toContain("ސޭވްކުރޭ")
+    expect(entry?.isEntry).toBe(true)
+    expect(entry?.dynamicImports).toHaveLength(2)
+    expect(fs.readFileSync(path.join(out, entry?.file as string), "utf8")).not.toContain("ސޭވްކުރޭ")
   })
 
   it("builds the Blade entry too", () => {
-    const manifest = JSON.parse(fs.readFileSync(path.join(out, "manifest.json"), "utf8"))
-    const blade = Object.keys(manifest).find((key) => key.endsWith("resources/js/blade.ts"))
-
-    expect(blade).toBeDefined()
+    expect(Object.keys(readManifest()).some((key) => key.endsWith("resources/js/blade.ts"))).toBe(true)
   })
 })

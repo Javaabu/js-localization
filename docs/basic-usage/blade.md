@@ -117,4 +117,4 @@ See manifest's [Prebuilt assets](https://github.com/Javaabu/manifest/blob/main/d
 
 # Development
 
-With Vite's dev server running and the [Vite plugin](./vite) added, editing a language file updates the lines on the page without a reload.
+With Vite's dev server running and `manifest()` in `vite.config.js` (which runs the [Vite plugin](./vite)), editing a language file updates the lines on the page without a reload.

@@ -7,7 +7,7 @@ In an Inertia app, or any app whose JavaScript is a Vite bundle, load the lines 
 
 # From the Vite plugin (recommended)
 
-Add the [Vite plugin](./vite) next to manifest's:
+Add manifest's plugin, which also runs this package's [Vite plugin](./vite):
 
 ```js
 // vite.config.js
@@ -15,13 +15,11 @@ import react from "@vitejs/plugin-react"
 import laravel from "laravel-vite-plugin"
 import { defineConfig } from "vite"
 import manifest from "./vendor/javaabu/manifest/dist/vite.js"
-import jsLocalization from "./vendor/javaabu/js-localization/dist/vite.js"
 
 export default defineConfig({
   plugins: [
     laravel({ input: ["resources/js/app.tsx"], refresh: ["resources/views/**", "routes/**"] }),
     manifest(),
-    jsLocalization(),
     react(),
   ],
 })

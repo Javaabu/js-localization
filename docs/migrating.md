@@ -46,7 +46,7 @@ What's exported changed in three ways:
 | `--source` / `-s` | Same. |
 | `--no-sort` / `-ns` | `--no-sort` (no short form). |
 
-Remove the old build hooks (`webpack-shell-plugin-next`, gulp or Elixir tasks). With Vite, the [Vite plugin](./basic-usage/vite) exports on every build and watches `lang/` while you work. Blade pages don't need a file at all: see below.
+Remove the old build hooks (`webpack-shell-plugin-next`, gulp or Elixir tasks). With Vite, the [Vite plugin](./basic-usage/vite), which `manifest()` runs, exports on every build and watches `lang/` while you work. Blade pages don't need a file at all: see below.
 
 # 4. The browser
 

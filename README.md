@@ -43,12 +43,11 @@ php artisan manifest:check   # installs @javaabu/i18n from npm
 Blade pages work now. For Inertia, React or Vue:
 
 ```js
-// vite.config.js
+// vite.config.js: manifest() also runs this package's Vite plugin
 import manifest from "./vendor/javaabu/manifest/dist/vite.js"
-import jsLocalization from "./vendor/javaabu/js-localization/dist/vite.js"
 
 export default defineConfig({
-  plugins: [laravel({ input: ["resources/js/app.tsx"] }), manifest(), jsLocalization(), react()],
+  plugins: [laravel({ input: ["resources/js/app.tsx"] }), manifest(), react()],
 })
 ```
 

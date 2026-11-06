@@ -3,23 +3,20 @@ title: Vite plugin
 sidebar_position: 3
 ---
 
-The Vite plugin bundles your translations into your app's build and keeps them current while you work, so you never run an export by hand. It ships inside the Composer package, at `vendor/javaabu/js-localization/dist/vite.js`. Use it next to [javaabu/manifest](https://github.com/Javaabu/manifest)'s plugin:
+The Vite plugin bundles your translations into your app's build and keeps them current while you work, so you never run an export by hand. The package registers it with [javaabu/manifest](https://github.com/Javaabu/manifest), so manifest's plugin runs it, and there's nothing to add for it:
 
 ```js
 // vite.config.js
 import laravel from "laravel-vite-plugin"
 import { defineConfig } from "vite"
 import manifest from "./vendor/javaabu/manifest/dist/vite.js"
-import jsLocalization from "./vendor/javaabu/js-localization/dist/vite.js"
 
 export default defineConfig({
-  plugins: [
-    laravel({ input: ["resources/js/app.ts"], refresh: ["resources/views/**", "routes/**"] }),
-    manifest(),
-    jsLocalization(),
-  ],
+  plugins: [laravel({ input: ["resources/js/app.ts"], refresh: ["resources/views/**", "routes/**"] }), manifest()],
 })
 ```
+
+Run Vite from your app's root (as `npm run dev` and `npm run build` do): manifest finds packages' plugins from there.
 
 # What it does
 
@@ -40,12 +37,18 @@ If the export fails while the dev server is running (a syntax error in a languag
 
 # Options
 
+Pass options through manifest, under the package's name:
+
 ```js
-jsLocalization({
-  command: "php artisan lang:js --stdout",
-  watch: ["lang", "config/js-localization.php"],
-  write: false,
-  hmr: true,
+manifest({
+  plugins: {
+    "js-localization": {
+      command: "php artisan lang:js --stdout",
+      watch: ["lang", "config/js-localization.php"],
+      write: false,
+      hmr: true,
+    },
+  },
 })
 ```
 
@@ -56,7 +59,11 @@ jsLocalization({
 | `write` | `false` | Also run `php artisan lang:js` (or this command) on start and on every change, so the files at `js-localization.path` stay current, for code that imports them directly. |
 | `hmr` | `true` | Send changed lines to the page. `false` reloads the page instead. |
 
-The plugin object also has `translations()`, which returns the lines it last exported.
+To turn the plugin off, for example in an app that only uses Blade pages and the endpoint:
+
+```js
+manifest({ plugins: { "js-localization": false } })
+```
 
 # laravel-vite-plugin's refresh
 
@@ -71,8 +78,17 @@ laravel({ input: ["resources/js/app.ts"], refresh: ["resources/views/**", "route
 When PHP runs in a container, tell the plugin how to run artisan:
 
 ```js
-jsLocalization({ command: "./vendor/bin/sail artisan lang:js --stdout" })
-jsLocalization({ command: "docker compose exec -T app php artisan lang:js --stdout" })
+manifest({
+  discover: "./vendor/bin/sail artisan manifest:discover",
+  plugins: { "js-localization": { command: "./vendor/bin/sail artisan lang:js --stdout" } },
+})
+```
+
+```js
+manifest({
+  discover: "docker compose exec -T app php artisan manifest:discover",
+  plugins: { "js-localization": { command: "docker compose exec -T app php artisan lang:js --stdout" } },
+})
 ```
 
 # Building without PHP
@@ -84,9 +100,31 @@ php artisan lang:js storage/app/translations.json
 ```
 
 ```js
-jsLocalization({ command: "cat storage/app/translations.json" })
+manifest({ discover: false, plugins: { "js-localization": { command: "cat storage/app/translations.json" } } })
 ```
 
-# Why a second plugin
+With `discover: false`, commit or copy `bootstrap/cache/manifest.json` too (see manifest's [Vite](https://github.com/Javaabu/manifest/blob/main/docs/basic-usage/vite.md) page).
 
-javaabu/manifest can't run plugins that packages ship yet ([Javaabu/manifest#14](https://github.com/Javaabu/manifest/issues/14)). Once it can, this package will register its plugin with manifest, and `manifest()` alone will be enough. Your `vite.config.js` will keep working either way.
+# Adding the plugin yourself
+
+Apps set up before manifest ran packages' plugins have this in `vite.config.js`:
+
+```js
+import jsLocalization from "./vendor/javaabu/js-localization/dist/vite.js"
+
+plugins: [laravel({ input: ["resources/js/app.ts"] }), manifest(), jsLocalization()]
+```
+
+It still works, but the plugin then runs twice, and manifest warns that `javaabu-js-localization` is in `vite.config.js` too. Remove the import and `jsLocalization()` to fix it, and move any options into `manifest({ plugins: { "js-localization": { ... } } })`.
+
+To keep adding it by hand (to pass options manifest can't, such as functions), turn off the registered one:
+
+```js
+plugins: [
+  laravel({ input: ["resources/js/app.ts"] }),
+  manifest({ plugins: { "js-localization": false } }),
+  jsLocalization({ command: "php artisan lang:js --stdout" }),
+]
+```
+
+The plugin object `jsLocalization()` returns also has `translations()`, the lines it last exported.

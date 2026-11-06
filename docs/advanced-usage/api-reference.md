@@ -94,4 +94,4 @@ Importing it also listens for the plugin's updates in development.
 
 ## Vite plugin
 
-`vendor/javaabu/js-localization/dist/vite.js`. The default export is `jsLocalization(options)`; see [Vite plugin](../basic-usage/vite) for the options. It also exports `exportTranslations(root, command)`, `VIRTUAL_MODULE_ID` (`"virtual:js-localization"`) and `UPDATE_EVENT`.
+`vendor/javaabu/js-localization/dist/vite.js`, registered with manifest (`->vitePlugin('../dist/vite.js')`), so `manifest()` runs it. The default export is `jsLocalization(options)`; see [Vite plugin](../basic-usage/vite) for the options and adding it by hand. It also exports `exportTranslations(root, command)`, `VIRTUAL_MODULE_ID` (`"virtual:js-localization"`) and `UPDATE_EVENT`.
