@@ -23,7 +23,8 @@
     "repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/Javaabu/manifest"
+            "url": "https://github.com/Javaabu/manifest",
+            "no-api": true
         }
     ],
     "require": {
